@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shakthi Priyan | Developer Portfolio</title>
+<meta name="description" content="Portfolio of Shakthi Priyan — engineering student, developer and tech enthusiast.">
+<style>
+:root{
+  --bg:#020308;
+  --panel:rgba(11,14,28,.68);
+  --panel2:rgba(18,23,43,.58);
+  --text:#f7f8ff;
+  --muted:#a7afc4;
+  --line:rgba(255,255,255,.10);
+  --accent:#7c6cff;
+  --accent2:#00d9ff;
+  --accent3:#9c7cff;
+  --success:#48e6ad;
+  --shadow:0 24px 80px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;line-height:1.6;
+}
+
+/* Background Galaxy & Effects Canvas */
+#galaxy{
+  position:fixed;inset:0;width:100%;height:100%;z-index:-3;
+  background:#020308;pointer-events:none;
+}
+.galaxy-glow{
+  position:fixed;inset:-20%;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(124,108,255,.14),transparent 35%),
+    radial-gradient(circle at 80% 65%,rgba(0,217,255,.11),transparent 38%),
+    radial-gradient(circle at 50% 50%,rgba(156,124,255,.08),transparent 45%);
+  filter:blur(30px);
+  transition:transform 0.2s ease-out;
+}
+.cursor-glow{
+  position:fixed;width:400px;height:400px;border-radius:50%;
+  pointer-events:none;z-index:-1;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(0,217,255,.15),rgba(124,108,255,.05) 40%,transparent 70%);
+  mix-blend-mode:screen;opacity:.85;
+  transition:width .3s, height .3s;
+}
+
+.container{width:min(1120px,92%);margin:auto}
+header{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  background:rgba(3,4,10,.56);border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-weight:900;letter-spacing:-.03em;font-size:1.15rem}
+.logo span{color:var(--accent2)}
+nav{display:flex;gap:20px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:.3s}
+nav a:hover{color:#fff}
+nav a.active{color:#fff}
+
+section{position:relative;min-height:100vh;padding:120px 0 80px;display:flex;align-items:center}
+.hero{min-height:100vh}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:center}
+.badge{
+  display:inline-flex;padding:7px 12px;border:1px solid rgba(0,217,255,.24);
+  border-radius:999px;background:rgba(0,217,255,.06);color:#9fefff;
+  font-size:.76rem;font-weight:800;letter-spacing:.12em;margin-bottom:22px;
+}
+
+/* Star Effect Text Container */
+.star-text-wrapper{
+  display:inline-block;
+  position:relative;
+  perspective:1000px;
+}
+
+h1{font-size:clamp(3rem,7vw,6.4rem);line-height:.94;letter-spacing:-.07em;margin-bottom:24px}
+.gradient{
+  background:linear-gradient(110deg,#fff 10%,#a99fff 48%,#00d9ff 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.hero p{font-size:1.08rem;color:var(--muted);max-width:650px}
+.buttons{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 18px;border-radius:12px;text-decoration:none;color:#fff;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);
+  transition:transform .3s,box-shadow .3s,background .3s;
+}
+.btn:hover{transform:translateY(-4px);background:rgba(255,255,255,.09);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.btn.primary{border-color:transparent;background:linear-gradient(110deg,var(--accent),var(--accent2));color:#050711;font-weight:800}
+
+.profile-wrap{display:flex;justify-content:center}
+.profile-card{
+  width:min(350px,100%);padding:30px;border:1px solid var(--line);
+  background:linear-gradient(145deg,rgba(20,25,48,.72),rgba(6,9,20,.64));
+  border-radius:28px;box-shadow:var(--shadow);text-align:center;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden;
+  transition:transform 0.2s ease-out;
+}
+.profile-card:before{
+  content:"";position:absolute;inset:-2px;
+  background:conic-gradient(from 180deg,transparent 30%,rgba(0,217,255,.5),rgba(124,108,255,.5),transparent 70%);
+  filter:blur(18px);opacity:.35;z-index:-1;animation:spin 9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avatar{
+  width:155px;height:155px;margin:0 auto 20px;border-radius:50%;
+  overflow:hidden;border:2px solid rgba(0,217,255,.65);
+  box-shadow:0 0 45px rgba(0,217,255,.22),0 0 90px rgba(124,108,255,.14);
+  background:linear-gradient(135deg,#161b35,#080b18);
+  display:grid;place-items:center;font-size:2.4rem;font-weight:900;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-card h2{font-size:1.45rem;margin-bottom:5px}
+.profile-card p{color:var(--muted)}
+.section-head{max-width:720px;margin-bottom:38px}
+.section-head .badge{margin-bottom:14px}
+h2.section-title{font-size:clamp(2.3rem,5vw,4rem);line-height:1;letter-spacing:-.055em}
+.section-head p{color:var(--muted);margin-top:15px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{
+  padding:26px;border:1px solid var(--line);border-radius:22px;
+  background:var(--panel);backdrop-filter:blur(14px);
+  box-shadow:0 15px 50px rgba(0,0,0,.22);
+  transition:transform .3s ease-out, border-color .45s, box-shadow .45s;
+}
+.card:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(0,217,255,.24);box-shadow:0 22px 60px rgba(0,0,0,.35)}
+.card h3{font-size:1.15rem;margin-bottom:10px}
+.card p{color:var(--muted)}
+.skills{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.skill{
+  padding:8px 12px;border:1px solid rgba(255,255,255,.09);border-radius:999px;
+  color:#dfe5f5;background:rgba(255,255,255,.035);font-size:.88rem;
+  transition:transform .2s, background .2s;
+}
+.skill:hover{transform:scale(1.08);background:rgba(0,217,255,.15)}
+.timeline{display:grid;gap:16px}
+.project-link{color:#fff;text-decoration:none}
+.project-link span{color:var(--accent2)}
+.contact-list{display:grid;gap:15px;margin-top:15px}
+.contact-item{display:flex;justify-content:space-between;gap:20px;padding:15px 0;border-bottom:1px solid var(--line)}
+.contact-item span{color:var(--muted)}
+.contact-item a{color:#9fefff;text-decoration:none;word-break:break-word}
+footer{padding:30px 0 50px;color:var(--muted);text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+
+/* Star Disintegrate / Combine Effect Classes */
+.star-word{
+  display:inline-block;
+  white-space:nowrap;
+  transition:transform 0.1s ease-out;
+}
+.star-char{
+  display:inline-block;
+  transition:transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease, filter 0.8s ease;
+  will-change:transform, opacity, filter;
+}
+
+.scroll-hint{margin-top:35px;color:#727c93;font-size:.82rem;display:flex;align-items:center;gap:8px}
+.scroll-hint i{display:inline-block;width:28px;height:1px;background:var(--accent2)}
+
+@media(max-width:800px){
+  .hero-grid,.grid{grid-template-columns:1fr}
+  .hero-grid{gap:42px}
+  nav{display:none}
+  section{padding-top:105px}
+  h1{font-size:clamp(3rem,15vw,5rem)}
+  .contact-item{flex-direction:column;gap:3px}
+}
+</style>
+</head>
+<body>
+<canvas id="galaxy"></canvas>
+<div class="galaxy-glow" id="galaxyGlow"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<header>
+  <div class="container nav">
+    <div class="logo">Shakthi<span>.dev</span></div>
+    <nav>
+      <a href="#home">Home</a><a href="#about">About</a><a href="#education">Education</a>
+      <a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">DEVELOPER PORTFOLIO</span>
+      <h1 class="star-text">Hi, I'm <span class="gradient">Shakthi Priyan.</span></h1>
+      <p>Engineering Student • Developer • Tech Enthusiast. I enjoy coding, solving problems, learning new technologies and turning ideas into practical projects.</p>
+      <div class="buttons">
+        <a class="btn primary" href="#projects">Explore Projects</a>
+        <a class="btn" href="#contact">Let's Connect</a>
+      </div>
+      <div class="scroll-hint"><i></i> Scroll to explore</div>
+    </div>
+    <div class="profile-wrap">
+      <div class="profile-card tilt-card">
+        <div class="avatar">
+          <img src="profile.jpg" alt="Shakthi Priyan" onerror="this.style.display='none';this.parentElement.innerHTML='SP'">
+        </div>
+        <h2>Developer in Progress</h2>
+        <p>Java • C • Python • DSA • Web Development</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge">01 / ABOUT</span>
+      <h2 class="section-title star-text">Building skills,<br><span class="gradient">one project at a time.</span></h2>
+      <p>I'm a 2nd-year engineering student at Panimalar Engineering College, interested in innovation, algorithms and real-world problem solving.</p>
+    </div>
+    <div class="grid">
+      <article class="card tilt-card"><h3>🧠 Problem Solver</h3><p>I enjoy understanding how algorithms and code can be used to solve practical problems.</p></article>
+      <article class="card tilt-card"><h3>🚀 Always Learning</h3><p>Currently strengthening Java, C, Python, Data Structures, SQL and web development.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge">02 / EDUCATION</span>
+      <h2 class="section-title star-text">My <span class="gradient">learning journey.</span></h2>
+    </div>
+    <div class="timeline">
+      <article class="card tilt-card"><h3>Panimalar Engineering College</h3><p>2025 – Present</p><p>Currently pursuing engineering and developing skills in programming, data structures and modern technologies.</p></article>
+      <article class="card tilt-card"><h3>Doveton Matriculation Higher Secondary School</h3><p>Higher Secondary • 12th Standard</p><p>Scored 90% in 12th standard.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge">03 / SKILLS</span>
+      <h2 class="section-title star-text">Tools in my <span class="gradient">developer kit.</span></h2>
+    </div>
+    <article class="card tilt-card">
+      <h3>Technical Skills</h3>
+      <div class="skills">
+        <span class="skill">Java</span><span class="skill">C</span><span class="skill">Python</span>
+        <span class="skill">Data Structures</span><span class="skill">Algorithms</span><span class="skill">SQL</span>
+        <span class="skill">DBMS</span><span class="skill">HTML</span><span class="skill">CSS</span>
+        <span class="skill">JavaScript</span><span class="skill">Git & GitHub</span><span class="skill">Problem Solving</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge">04 / PROJECTS</span>
+      <h2 class="section-title star-text">Ideas turned into <span class="gradient">projects.</span></h2>
+      <p>A few projects and concepts I've worked on through college, hackathons and learning.</p>
+    </div>
+    <div class="grid">
+      <article class="card tilt-card"><h3>💼 JobBuddy</h3><p>A job-seeker focused application designed to help youngsters discover opportunities and move toward employment.</p></article>
+      <article class="card tilt-card"><h3>⚽ SportX – Smart Sports Ecosystem</h3><p>AI + IoT concept for athlete monitoring, sports facility management, grassroots talent discovery and fitness engagement.</p></article>
+      <article class="card tilt-card"><h3>📚 Smart Learn</h3><p>A micro-learning platform concept with practical skill lessons, AI learning support, mentor connection and multilingual learning.</p></article>
+      <article class="card tilt-card"><h3>🦯 Smart Blind Stick</h3><p>An assistive technology concept using a camera and audio feedback to support navigation for visually challenged users.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge">05 / CONTACT</span>
+      <h2 class="section-title star-text">Let's <span class="gradient">connect.</span></h2>
+      <p>For projects, collaboration, learning opportunities or simply to say hello.</p>
+    </div>
+    <div class="grid">
+      <article class="card tilt-card">
+        <h3>📬 Contact Details</h3>
+        <div class="contact-list">
+          <div class="contact-item"><span>Email</span><a href="mailto:shakthipriyan2307@gmail.com">shakthipriyan2307@gmail.com</a></div>
+          <div class="contact-item"><span>LinkedIn</span><a href="https://www.linkedin.com/in/shakthi-priyan-428520341" target="_blank" rel="noopener">linkedin.com/in/shakthi-priyan-428520341</a></div>
+          <div class="contact-item"><span>GitHub</span><a href="https://github.com/Shakth0777" target="_blank" rel="noopener">github.com/Shakth0777</a></div>
+        </div>
+      </article>
+      <article class="card tilt-card">
+        <h3>🚀 Open to</h3>
+        <p>Student projects, hackathons, internships, networking, technical collaboration and opportunities to learn and build.</p>
+        <div class="buttons"><a class="btn primary" href="mailto:shakthipriyan2307@gmail.com">Send Email</a><a class="btn" href="#home">Back Home</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="container">© <span id="year"></span> Shakthi Priyan • Built with HTML, CSS & JavaScript</div></footer>
+
+<script>
+// --- 1. Distant 3D Galaxy Simulation Canvas ---
+const canvas = document.getElementById('galaxy');
+const ctx = canvas.getContext('2d');
+const cursorGlow = document.getElementById('cursorGlow');
+const galaxyGlow = document.getElementById('galaxyGlow');
+
+let w, h, dpr;
+let stars = [];
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2, targetX: window.innerWidth/2, targetY: window.innerHeight/2, vx: 0, vy: 0 };
+
+function initCanvas() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // Generate 3D Spiral Galaxy Particles
+  stars = [];
+  const numStars = Math.min(1200, Math.floor((w * h) / 1200));
+  for (let i = 0; i < numStars; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.pow(Math.random(), 2) * Math.min(w, h) * 0.9; // Concentrate towards galaxy center
+    const spiralAngle = angle + distance * 0.0025; // Spiral arms shape
+    stars.push({
+      x: Math.cos(spiralAngle) * distance,
+      y: (Math.sin(spiralAngle) * distance) * 0.4, // Tilt galaxy plane
+      z: (Math.random() - 0.5) * 600, // Deep depth field
+      baseSize: 0.5 + Math.random() * 1.5,
+      alpha: 0.3 + Math.random() * 0.7,
+      cyan: Math.random() < 0.3,
+      purple: Math.random() < 0.25,
+      speed: 0.0003 + Math.random() * 0.0005
+    });
+  }
+}
+
+let scrollY = window.scrollY;
+window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+// Render Loop for Galaxy background
+function renderGalaxy(t) {
+  ctx.clearRect(0, 0, w, h);
+
+  // Smooth Cursor interpolation
+  mouse.x += (mouse.targetX - mouse.x) * 0.05;
+  mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+  const cx = w / 2 + (mouse.x - w / 2) * 0.08;
+  const cy = h / 2 + (mouse.y - h / 2) * 0.08 - (scrollY * 0.05);
+
+  const fov = 400;
+
+  stars.forEach(s => {
+    // Slowly rotate galaxy in distance
+    const currentAngle = Math.atan2(s.y, s.x) + s.speed;
+    const currentDist = Math.hypot(s.x, s.y);
+    s.x = Math.cos(currentAngle) * currentDist;
+    s.y = Math.sin(currentAngle) * currentDist;
+
+    // 3D Perspective Projection
+    const scale = fov / (fov + s.z);
+    const px = cx + s.x * scale;
+    const py = cy + s.y * scale;
+
+    if (px > 0 && px < w && py > 0 && py < h) {
+      const distToMouse = Math.hypot(px - mouse.x, py - mouse.y);
+      let mouseInfluence = Math.max(0, 1 - distToMouse / 200);
+
+      const size = (s.baseSize * scale) + (mouseInfluence * 1.5);
+      const alpha = Math.min(1, s.alpha * scale + mouseInfluence * 0.5);
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      if (s.cyan) ctx.fillStyle = '#8cefff';
+      else if (s.purple) ctx.fillStyle = '#c3a1ff';
+      else ctx.fillStyle = '#ffffff';
+
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sparkle glow on larger stars
+      if (s.baseSize > 1.2 || mouseInfluence > 0.4) {
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = s.cyan ? '#00d9ff' : '#7c6cff';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  });
+
+  requestAnimationFrame(renderGalaxy);
+}
+
+window.addEventListener('resize', initCanvas);
+initCanvas();
+requestAnimationFrame(renderGalaxy);
+
+
+// --- 2. Cursor Interactions & Dynamic Elements Movement ---
+window.addEventListener('mousemove', (e) => {
+  mouse.targetX = e.clientX;
+  mouse.targetY = e.clientY;
+
+  // Cursor Light Follower
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
+
+  // Ambient Glow Displacement
+  const offsetX = (e.clientX - window.innerWidth / 2) * 0.03;
+  const offsetY = (e.clientY - window.innerHeight / 2) * 0.03;
+  galaxyGlow.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+});
+
+// Card 3D Dynamic Tilt Effect on Mouse Movement
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    card.style.transform = `perspective(1000px) rotateX(${-y / 18}deg) rotateY(${x / 18}deg) translateY(-6px)`;
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+  });
+});
+
+
+// --- 3. Text Star Dissolve & Reassemble Scroll Animation ---
+function setupStarText() {
+  const starTexts = document.querySelectorAll('.star-text');
+
+  starTexts.forEach(el => {
+    const nodes = Array.from(el.childNodes);
+    el.innerHTML = '';
+
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        wrapWords(node.textContent, el, false);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const span = document.createElement('span');
+        span.className = node.className;
+        wrapWords(node.textContent, span, true);
+        el.appendChild(span);
+      }
+    });
+  });
+}
+
+function wrapWords(text, container, isGradient) {
+  const words = text.split(' ');
+  words.forEach((word, wIdx) => {
+    if (!word) return;
+    const wordSpan = document.createElement('span');
+    wordSpan.className = 'star-word';
+
+    for (let char of word) {
+      const charSpan = document.createElement('span');
+      charSpan.className = 'star-char';
+      charSpan.textContent = char;
+      wordSpan.appendChild(charSpan);
+    }
+
+    container.appendChild(wordSpan);
+    if (wIdx < words.length - 1) {
+      container.appendChild(document.createTextNode(' '));
+    }
+  });
+}
+
+setupStarText();
+
+// Scroll handler for Star Disintegration & Reassembly
+function updateStarTextScroll() {
+  const chars = document.querySelectorAll('.star-char');
+  const viewHeight = window.innerHeight;
+
+  chars.forEach((char, idx) => {
+    const rect = char.getBoundingClientRect();
+    const charCenter = rect.top + rect.height / 2;
+
+    // Normalize position relative to viewport (0 = top, 1 = bottom)
+    const progress = charCenter / viewHeight;
+
+    // Seeded pseudo-random offsets for consistent particle trajectories
+    const seed = (idx * 17) % 100;
+    const scatterX = ((seed % 10) - 5) * 18;
+    const scatterY = (seed - 50) * 2.5;
+
+    if (progress < 0.15) {
+      // Disintegrate into stars when scrolling UP & leaving screen at top
+      const factor = Math.min(1, (0.15 - progress) / 0.25);
+      const ty = -factor * 90 + scatterY * factor;
+      const tx = scatterX * factor * 2;
+      const opacity = Math.max(0, 1 - factor * 1.2);
+      const blur = factor * 12;
+
+      char.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${1 + factor * 0.8})`;
+      char.style.opacity = opacity;
+      char.style.filter = `blur(${blur}px)`;
+    } 
+    else if (progress > 0.85) {
+      // Assemble from stars when scrolling DOWN & coming into screen from bottom
+      const factor = Math.min(1, (progress - 0.85) / 0.25);
+      const ty = factor * 90 + scatterY * factor;
+      const tx = scatterX * factor * 2;
+      const opacity = Math.max(0, 1 - factor * 1.2);
+      const blur = factor * 12;
+
+      char.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${1 + factor * 0.8})`;
+      char.style.opacity = opacity;
+      char.style.filter = `blur(${blur}px)`;
+    } 
+    else {
+      // Fully formed text in focus area
+      char.style.transform = 'translate3d(0, 0, 0) scale(1)';
+      char.style.opacity = 1;
+      char.style.filter = 'blur(0px)';
+    }
+  });
+}
+
+window.addEventListener('scroll', updateStarTextScroll, { passive: true });
+updateStarTextScroll();
+
+// Active nav and year setup
+document.getElementById('year').textContent = new Date().getFullYear();
+const sections = [...document.querySelectorAll('section')];
+const links = [...document.querySelectorAll('nav a')];
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, { threshold: 0.5 });
+sections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
