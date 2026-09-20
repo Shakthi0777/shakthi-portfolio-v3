@@ -72,18 +72,21 @@ section{position:relative;min-height:100vh;padding:120px 0 80px;display:flex;ali
   font-size:.76rem;font-weight:800;letter-spacing:.12em;margin-bottom:22px;
 }
 
-/* Star Effect Text Container */
-.star-text-wrapper{
-  display:inline-block;
-  position:relative;
-  perspective:1000px;
-}
-
 h1{font-size:clamp(3rem,7vw,6.4rem);line-height:.94;letter-spacing:-.07em;margin-bottom:24px}
 .gradient{
   background:linear-gradient(110deg,#fff 10%,#a99fff 48%,#00d9ff 90%);
-  -webkit-background-clip:text;background-clip:text;color:transparent
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
+
+/* Fix for individual star-char elements inside gradient wrappers */
+.gradient .star-char{
+  background:linear-gradient(110deg,#fff 10%,#a99fff 48%,#00d9ff 90%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+
 .hero p{font-size:1.08rem;color:var(--muted);max-width:650px}
 .buttons{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
 .btn{
@@ -329,12 +332,12 @@ function initCanvas() {
   const numStars = Math.min(1200, Math.floor((w * h) / 1200));
   for (let i = 0; i < numStars; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const distance = Math.pow(Math.random(), 2) * Math.min(w, h) * 0.9; // Concentrate towards galaxy center
-    const spiralAngle = angle + distance * 0.0025; // Spiral arms shape
+    const distance = Math.pow(Math.random(), 2) * Math.min(w, h) * 0.9;
+    const spiralAngle = angle + distance * 0.0025;
     stars.push({
       x: Math.cos(spiralAngle) * distance,
-      y: (Math.sin(spiralAngle) * distance) * 0.4, // Tilt galaxy plane
-      z: (Math.random() - 0.5) * 600, // Deep depth field
+      y: (Math.sin(spiralAngle) * distance) * 0.4,
+      z: (Math.random() - 0.5) * 600,
       baseSize: 0.5 + Math.random() * 1.5,
       alpha: 0.3 + Math.random() * 0.7,
       cyan: Math.random() < 0.3,
@@ -361,13 +364,11 @@ function renderGalaxy(t) {
   const fov = 400;
 
   stars.forEach(s => {
-    // Slowly rotate galaxy in distance
     const currentAngle = Math.atan2(s.y, s.x) + s.speed;
     const currentDist = Math.hypot(s.x, s.y);
     s.x = Math.cos(currentAngle) * currentDist;
     s.y = Math.sin(currentAngle) * currentDist;
 
-    // 3D Perspective Projection
     const scale = fov / (fov + s.z);
     const px = cx + s.x * scale;
     const py = cy + s.y * scale;
@@ -389,7 +390,6 @@ function renderGalaxy(t) {
       ctx.arc(px, py, size, 0, Math.PI * 2);
       ctx.fill();
 
-      // Sparkle glow on larger stars
       if (s.baseSize > 1.2 || mouseInfluence > 0.4) {
         ctx.shadowBlur = 8;
         ctx.shadowColor = s.cyan ? '#00d9ff' : '#7c6cff';
@@ -412,17 +412,14 @@ window.addEventListener('mousemove', (e) => {
   mouse.targetX = e.clientX;
   mouse.targetY = e.clientY;
 
-  // Cursor Light Follower
   cursorGlow.style.left = e.clientX + 'px';
   cursorGlow.style.top = e.clientY + 'px';
 
-  // Ambient Glow Displacement
   const offsetX = (e.clientX - window.innerWidth / 2) * 0.03;
   const offsetY = (e.clientY - window.innerHeight / 2) * 0.03;
   galaxyGlow.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
 });
 
-// Card 3D Dynamic Tilt Effect on Mouse Movement
 document.querySelectorAll('.tilt-card').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
@@ -437,45 +434,40 @@ document.querySelectorAll('.tilt-card').forEach(card => {
 });
 
 
-// --- 3. Text Star Dissolve & Reassemble Scroll Animation ---
+// --- 3. Fixed Text Star Dissolve & Reassemble Function ---
 function setupStarText() {
-  const starTexts = document.querySelectorAll('.star-text');
-
-  starTexts.forEach(el => {
-    const nodes = Array.from(el.childNodes);
-    el.innerHTML = '';
-
-    nodes.forEach(node => {
+  document.querySelectorAll('.star-text').forEach(el => {
+    const processNode = (node, container) => {
       if (node.nodeType === Node.TEXT_NODE) {
-        wrapWords(node.textContent, el, false);
+        const words = node.textContent.split(' ');
+        words.forEach((word, wIdx) => {
+          if (word) {
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'star-word';
+
+            for (let char of word) {
+              const charSpan = document.createElement('span');
+              charSpan.className = 'star-char';
+              charSpan.textContent = char;
+              wordSpan.appendChild(charSpan);
+            }
+            container.appendChild(wordSpan);
+          }
+          if (wIdx < words.length - 1) {
+            container.appendChild(document.createTextNode(' '));
+          }
+        });
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const span = document.createElement('span');
         span.className = node.className;
-        wrapWords(node.textContent, span, true);
-        el.appendChild(span);
+        Array.from(node.childNodes).forEach(child => processNode(child, span));
+        container.appendChild(span);
       }
-    });
-  });
-}
+    };
 
-function wrapWords(text, container, isGradient) {
-  const words = text.split(' ');
-  words.forEach((word, wIdx) => {
-    if (!word) return;
-    const wordSpan = document.createElement('span');
-    wordSpan.className = 'star-word';
-
-    for (let char of word) {
-      const charSpan = document.createElement('span');
-      charSpan.className = 'star-char';
-      charSpan.textContent = char;
-      wordSpan.appendChild(charSpan);
-    }
-
-    container.appendChild(wordSpan);
-    if (wIdx < words.length - 1) {
-      container.appendChild(document.createTextNode(' '));
-    }
+    const nodes = Array.from(el.childNodes);
+    el.innerHTML = '';
+    nodes.forEach(node => processNode(node, el));
   });
 }
 
@@ -489,17 +481,13 @@ function updateStarTextScroll() {
   chars.forEach((char, idx) => {
     const rect = char.getBoundingClientRect();
     const charCenter = rect.top + rect.height / 2;
-
-    // Normalize position relative to viewport (0 = top, 1 = bottom)
     const progress = charCenter / viewHeight;
 
-    // Seeded pseudo-random offsets for consistent particle trajectories
     const seed = (idx * 17) % 100;
     const scatterX = ((seed % 10) - 5) * 18;
     const scatterY = (seed - 50) * 2.5;
 
     if (progress < 0.15) {
-      // Disintegrate into stars when scrolling UP & leaving screen at top
       const factor = Math.min(1, (0.15 - progress) / 0.25);
       const ty = -factor * 90 + scatterY * factor;
       const tx = scatterX * factor * 2;
@@ -511,7 +499,6 @@ function updateStarTextScroll() {
       char.style.filter = `blur(${blur}px)`;
     } 
     else if (progress > 0.85) {
-      // Assemble from stars when scrolling DOWN & coming into screen from bottom
       const factor = Math.min(1, (progress - 0.85) / 0.25);
       const ty = factor * 90 + scatterY * factor;
       const tx = scatterX * factor * 2;
@@ -523,7 +510,6 @@ function updateStarTextScroll() {
       char.style.filter = `blur(${blur}px)`;
     } 
     else {
-      // Fully formed text in focus area
       char.style.transform = 'translate3d(0, 0, 0) scale(1)';
       char.style.opacity = 1;
       char.style.filter = 'blur(0px)';
